@@ -1,0 +1,17 @@
+{
+  "name": "@packages/api-rest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@packages/brainstorm": "^1.0.0",
+    "@packages/domains": "^1.0.0",
+    "dotenv": "^9.0.2"
+  }
+}
