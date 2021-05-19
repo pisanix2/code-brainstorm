@@ -7,13 +7,25 @@ const execute = async ({ payload, context, database, action, logger, transaction
   if (!payload.id) {
     payload.id = uuid()
   }
-  if (context.user) {
-    if (model.rawAttributes.contractId && (!payload.contractId)) {
-      payload.contractId = context.user.contractId
+
+  let include = []
+  if (context.relations) {
+    let obj = context.relations
+    if (typeof obj === 'string') {
+      obj = JSON.parse(decodeURIComponent(obj))
+    }
+    if (!Array.isArray(obj)) obj = [obj]
+
+    for (const item of obj) {
+      const model = database[item]
+      if (model) {
+        include.push({ model, as: item })
+      }
     }
   }
-  const dataCreated = await model.create(payload, { transaction })
-  payload = await model.findByPk(dataCreated.id, { transaction })
+
+  const dataCreated = await model.create(payload, { transaction, include })
+  payload = await model.findByPk(dataCreated.id, { transaction, include })
   return payload
 }
 

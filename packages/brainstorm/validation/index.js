@@ -1,5 +1,5 @@
 const Ajv = require('ajv')
-const ajv = new Ajv({ allErrors: true, removeAdditional:'all' })
+const ajv = new Ajv({ allErrors: true, removeAdditional: 'all' })
 const compiled = {}
 const schemaStr = {}
 

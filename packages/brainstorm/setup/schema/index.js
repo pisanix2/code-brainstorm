@@ -11,7 +11,7 @@ const register = (schemas) => {
     schemaObj[schema.name] = schema.schema
 
     if (schema.persistenceName) {
-      modelImport.importSchema(schema)
+      modelImport.importSchema(schema, schemas)
     }
   }
   registerSchema(schemas)

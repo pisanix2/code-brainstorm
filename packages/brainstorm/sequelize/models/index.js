@@ -12,4 +12,12 @@ config.logging = (sql) => {
 db.sequelize = new Sequelize(config.database, config.username, config.password, config)
 db.Sequelize = Sequelize
 
+db.associate = () => {
+  Object.keys(db).forEach(modelName => {
+    if (db[modelName].associate) {
+      db[modelName].associate(db)
+    }
+  })
+}
+
 module.exports = db

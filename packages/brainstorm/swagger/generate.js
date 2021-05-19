@@ -2,6 +2,7 @@ const fs = require('fs');
 const YAML = require('json-to-pretty-yaml');
 const schema = require('../setup/schema')
 const path = `${__dirname}/__cache/api-definition.js`
+const modelCache = {}
 
 const createJson = (actions) => {
   const jsonObj = {}
@@ -65,38 +66,60 @@ const createJson = (actions) => {
     if (hasValid) {
       const schemaObj = schema.getSchemaByName(item.schema)
       if (schemaObj) {
+        if (modelCache[item.schema]) {
+
+        } else {
+          modelCache[item.schema] = {}
+          modelCache[item.schema].properties = schemaObj.properties
+        }
+
         objParams.push({
           in: 'body',
           name: 'body',
           type: 'object',
-          properties: schemaObj.properties
+          schema: {
+            '$ref': `#/definitions/${item.schema}`
+          }
         })
       }
     }
 
-    let schemaBody = null
+    let schemaResp200 = null
     if (docs.outputSchema) {
       const schemaObj = schema.getSchemaByName(docs.outputSchema)
       if (schemaObj) {
-        let propertiesLocal = schemaObj
+        if (modelCache[docs.outputSchema]) {
+
+        } else {
+          modelCache[docs.outputSchema] = {}
+          modelCache[docs.outputSchema].properties = schemaObj.properties
+        }
+        let propertiesLocal = {
+          schema: {
+            '$ref': `#/definitions/${docs.outputSchema}`
+          }
+        }
         if (hasRead) {
           propertiesLocal = {
-            properties: {
-              count: { type: 'integer' },
-              rows: { type: 'array', items: { type: 'object', properties: schemaObj.properties } }
+            schema: {
+              properties: {
+                count: { type: 'integer' },
+                rows: {
+                  type: 'array',
+                  '$ref': `#/definitions/${docs.outputSchema}`
+                }
+              }
             }
           }
         }
-        schemaBody = {
-          properties: propertiesLocal.properties
-        }
+        schemaResp200 = propertiesLocal
       }
     }
 
     const obj200 = {
       '200': {
         description: 'OK',
-        schema: schemaBody
+        ...schemaResp200
       }
     }
 
@@ -145,6 +168,7 @@ const createJson = (actions) => {
     jsonObj[url] = jsonObj[url] || {}
     jsonObj[url] = { ...objAct, ...jsonObj[url] }
   }
+  jsonObj.definitions = modelCache
   return jsonObj
 }
 
@@ -162,7 +186,7 @@ const generate = (actions) => {
   const data = `/**\n * @swagger\n * ${strYml}/\n`
 
   if (!fs.existsSync(path)) {
-    fs.writeFileSync(path, '', (err) => {})
+    fs.writeFileSync(path, '', (err) => { })
   }
   fs.appendFileSync(path, data, (err) => {
     if (err) return console.log(err)
@@ -175,7 +199,7 @@ const resetFile = () => {
   }
 }
 
-module.exports = { 
+module.exports = {
   generate,
   resetFile
 }

@@ -32,6 +32,8 @@ const register = (actions) => {
 }
 
 const listen = (port) => {
+  database.associate()
+
   swagger.register(app)
   notFoundCatch(app)
   errorCatch(app)
