@@ -61,7 +61,11 @@ const JSONSchemaToModelFile = (schema) => {
   }
   `
 
-  const name = `${__dirname}/__cache/${schema.name}.js`
+  const path = `${__dirname}/__cache`
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path)
+  }
+  const name = `${path}/${schema.name}.js`
   const str = `
     ${head}
     ${properties}

@@ -1,7 +1,8 @@
 const fs = require('fs');
 const YAML = require('json-to-pretty-yaml');
 const schema = require('../setup/schema')
-const path = `${__dirname}/__cache/api-definition.js`
+const pathCache = `${__dirname}/__cache`
+const path = `${pathCache}/api-definition.js`
 
 const createJson = (actions) => {
   const jsonObj = {}
@@ -161,6 +162,9 @@ const generate = (actions) => {
   strYml = strYml.replace(/\n/g, '\n * ').trimEnd()
   const data = `/**\n * @swagger\n * ${strYml}/\n`
 
+  if (!fs.existsSync(pathCache)) {
+    fs.mkdirSync(pathCache)
+  }
   if (!fs.existsSync(path)) {
     fs.writeFileSync(path, '', (err) => {})
   }

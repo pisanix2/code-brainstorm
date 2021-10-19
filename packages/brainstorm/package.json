@@ -1,12 +1,12 @@
 {
   "name": "@pisanix/brainstorm",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Pisani <pisanix@gmail.com> (https://www.linkedin.com/in/pisanix)",
   "license": "ISC",
   "dependencies": {
     "ajv": "^8.3.0",

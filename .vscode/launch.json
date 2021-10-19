@@ -8,8 +8,8 @@
       "type": "node",
       "request": "launch",
       "console": "integratedTerminal",
-      "name": "Launch api-rest",
-      "program": "${workspaceFolder}/packages/api-rest/index.js"
+      "name": "Launch api-sample",
+      "program": "${workspaceFolder}/packages/api-sample/index.js"
     }
   ]
 }
