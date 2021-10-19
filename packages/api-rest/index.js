@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { listen, registerDomain } = require('@packages/brainstorm/setup')
+const { listen, registerDomain } = require('@pisanix/brainstorm/setup')
 
 registerDomain([
   `${__dirname}/domains/user`

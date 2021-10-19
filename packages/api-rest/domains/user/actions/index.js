@@ -1,4 +1,4 @@
-const { ACTION_TYPE, RULE_DEFAULT } = require('@packages/brainstorm/shared/enums')
+const { ACTION_TYPE, RULE_DEFAULT } = require('@pisanix/brainstorm/shared/enums')
 
 module.exports = [{
   id: 'user-read-by-id',

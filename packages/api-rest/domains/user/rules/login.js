@@ -1,4 +1,4 @@
-const { sign } = require('@packages/brainstorm/shared/jwt')
+const { sign } = require('@pisanix/brainstorm/shared/jwt')
 
 const execute = async ({ payload, params, database, action, logger, errors, context, transaction }) => {
   //  if (context.authorization) {

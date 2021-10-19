@@ -10,8 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@packages/brainstorm": "^1.0.0",
-    "@packages/domains": "^1.0.0",
+    "@pisanix/brainstorm": "^1.0.0",
     "dotenv": "^9.0.2"
   }
 }
