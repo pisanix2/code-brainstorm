@@ -13,6 +13,7 @@ const execute = ({ payload, context, database, action, logger, errors }) => {
       const message = det.message
       error.addError(code, message)
     }
+    logger.error({ message: JSON.stringify(error.errors) })
     throw error
   }
 }
