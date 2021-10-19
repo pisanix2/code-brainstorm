@@ -8,8 +8,8 @@
       "type": "node",
       "request": "launch",
       "console": "integratedTerminal",
-      "name": "Launch api-sample",
-      "program": "${workspaceFolder}/packages/api-sample/index.js"
+      "name": "Launch sample-api",
+      "program": "${workspaceFolder}/packages/sample-api/index.js"
     }
   ]
 }
