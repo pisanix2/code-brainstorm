@@ -1,3 +1,4 @@
 import Table from './Table'
+import SchemaForm from './SchemaForm'
 
-export { Table }
+export { Table, SchemaForm }

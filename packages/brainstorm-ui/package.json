@@ -51,6 +51,7 @@
     "dist"
   ],
   "dependencies": {
+    "@rjsf/core": "^3.2.0",
     "react-table": "^7.7.0",
     "styled-components": "^5.3.3"
   }

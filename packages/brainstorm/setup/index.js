@@ -40,6 +40,7 @@ const registerDomain = (domains) => {
 }
 
 const listen = (port) => {
+  api.handlerGetSchema({ getSchemaByName: schema.getSchemaByName })
   api.listen(port)
 }
 

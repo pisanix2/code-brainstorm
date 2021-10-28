@@ -42,6 +42,13 @@ const listen = (port) => {
   server.on('listening', onListening)
 }
 
+const handlerGetSchema = ({ getSchemaByName }) => {
+  app.get('/schema/:name', (req, res) => {
+    const { name } = req.params
+    res.send(getSchemaByName(name))
+  })
+}
+
 const handlerLocal = (action) => {
   return async (req, res, next) => {
     let transaction = null
@@ -84,5 +91,6 @@ const actionToVerb = (action) => {
 
 module.exports = {
   register,
-  listen
+  listen,
+  handlerGetSchema
 }
