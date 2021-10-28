@@ -35,13 +35,11 @@ const createJson = (actions) => {
         in: 'query',
         name: 'sortBy',
         description: 'Campo que irá ordenar os registros retornados',
-        type: 'string'
-      })
-      objParams.push({
-        in: 'query',
-        name: 'descending',
-        description: 'A ordenação será decrescente?',
-        type: 'boolean'
+        type: 'array',
+        items: { type: 'object', properties: { 
+          id: { type: 'string' },
+          desc: { type: 'boolean'}
+        } }
       })
       objParams.push({
         in: 'query',

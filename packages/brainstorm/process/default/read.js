@@ -3,12 +3,13 @@ const execute = async ({ payload, context, database, action, logger, transaction
 
   let order = null
   if (context.sortBy) {
-    order = [[
-      context.sortBy,
-      (context.descending === 'true' ? 'DESC' : 'ASC')
-    ]]
+    let sortBy = JSON.parse(decodeURIComponent(context.sortBy))
+    if (!Array.isArray(sortBy)) {
+      sortBy = [sortBy]
+    }
+    order = sortBy.map(el => ([el.id, (el.desc ? 'DESC' : 'ASC')]))
   }
-
+  
   let limit = null
   let offset = null
   if (context.page && context.rowsPerPage) {
