@@ -21,6 +21,7 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/brainstorm/package.json
+  publish-ui:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
