@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - master
-      - brainstorm-ui
 
 jobs:
   publish:
@@ -21,15 +20,3 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/brainstorm/package.json
-  publish-ui:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-      - run: npm install
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: ./packages/brainstorm-ui/package.json
