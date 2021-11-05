@@ -2,7 +2,7 @@
   "name": "@pisanix/brainstorm-ui",
   "version": "1.0.1",
   "description": "Made with create-react-library",
-  "author": "pisanix2",
+  "author": "Pisani <pisanix@gmail.com> (https://www.linkedin.com/in/pisanix)",
   "license": "MIT",
   "repository": "pisanix2/@pisanix/brainstorm-ui",
   "main": "dist/index.js",
