@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: '14.x'
           registry-url: 'https://registry.npmjs.org'
+      - run: npm login
       - run: cd ./packages/brainstorm-ui/ && npm install
       - run: cd ./packages/brainstorm-ui/ && npm publish
         env:
