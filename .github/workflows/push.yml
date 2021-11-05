@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: '14.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: cd ./packages/brainstorm-ui/ && npm install
-      - run: cd ./packages/brainstorm-ui/ && npm publish --access public
+      - run: cd ./packages/brainstorm-ui/ && yarn
+      - run: cd ./packages/brainstorm-ui/ && yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
