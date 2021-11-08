@@ -3,6 +3,7 @@ const schema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'User',
   type: 'object',
+  primaryKey: 'id',
   properties: {
     id_tenant: { type: 'string' },
     login: { type: 'string' },

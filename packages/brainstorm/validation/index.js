@@ -8,6 +8,9 @@ const registerSchema = (schemas) => {
     if (compiled[schema.name]) {
       throw new Error(`Schema ${schema.name} was exists`)
     }
+    if (schema && schema.schema && schema.schema.primaryKey) {
+      delete schema.schema.primaryKey
+    }
     schemaStr[schema.name] = schema.schema
     compiled[schema.name] = ajv.compile(schema.schema)
   }
