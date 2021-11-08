@@ -1,5 +1,5 @@
 const Ajv = require('ajv')
-const ajv = new Ajv({ allErrors: true, removeAdditional:'all' })
+const ajv = new Ajv({ allErrors: true, removeAdditional:'all', strict: false })
 const compiled = {}
 const schemaStr = {}
 
@@ -7,9 +7,6 @@ const registerSchema = (schemas) => {
   for (const schema of schemas) {
     if (compiled[schema.name]) {
       throw new Error(`Schema ${schema.name} was exists`)
-    }
-    if (schema && schema.schema && schema.schema.primaryKey) {
-      delete schema.schema.primaryKey
     }
     schemaStr[schema.name] = schema.schema
     compiled[schema.name] = ajv.compile(schema.schema)
