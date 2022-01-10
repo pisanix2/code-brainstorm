@@ -12,9 +12,11 @@ const { onError, onListening } = require('../../shared/entrypoint')
 const { executeAction } = require('../../process/handler')
 const database = require('../../sequelize/models')
 const cors = require('../../shared/cors')
+const fileUpload = require('express-fileupload')
 
 cors(app)
 app.use(bodyParser.json({ limit: '1024kb' }))
+app.use(fileUpload())
 swagger.resetFile()
 
 const register = (actions) => {
@@ -51,7 +53,7 @@ const handlerLocal = (action) => {
     try {
       const contextInit = { ...req.params, ...req.query }
       contextInit.authorization = req.headers['authorization']
-      const ret = await executeAction({ actionId: action.id, payload: req.body, context: contextInit, transaction })
+      const ret = await executeAction({ actionId: action.id, payload: req.body, context: contextInit, transaction, files: req.files })
 
       if (transaction) {
         await transaction.commit()
