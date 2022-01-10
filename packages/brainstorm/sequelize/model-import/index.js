@@ -14,6 +14,7 @@ const typeSchemaToModel = (type, format) => {
   if (type === 'number') return 'NUMBER'
   else if (type === 'boolean') return 'BOOLEAN'
   else if (type === 'object') return 'JSONB'
+  else if (type === 'array') return 'JSONB'
   else {
     if (format === 'date-time') return 'DATE'
     else return 'STRING'
@@ -32,7 +33,7 @@ const JSONSchemaToModelFile = (schema) => {
   const keys = Object.keys(schema.schema.properties)
   const pk = schema.schema.primaryKey
   for (const col of keys) {
-    if (['string', 'number', 'date', 'integer', 'boolean', 'object'].indexOf(props[col].type) >= 0) {
+    if (['string', 'number', 'date', 'integer', 'boolean', 'object', 'array'].indexOf(props[col].type) >= 0) {
       let colStr = ''
       const colDef = props[col]
       if (!colDef.virtual) {
