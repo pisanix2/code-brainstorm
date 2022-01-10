@@ -14,6 +14,7 @@ const typeSchemaToModel = (type, format) => {
   if (type === 'number') return 'NUMBER'
   else if (type === 'boolean') return 'BOOLEAN'
   else if (type === 'object') return 'JSONB'
+  else if (type === 'timestamp') return 'DATE'
   else {
     if (format === 'date-time') return 'DATE'
     else return 'STRING'

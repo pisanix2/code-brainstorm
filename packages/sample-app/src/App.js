@@ -102,6 +102,7 @@ function App() {
         loadMore={loadMore}
         columns={columns}
       />
+      
       <SchemaForm
         schema={schema}
         uiSchema={uiSchema}
