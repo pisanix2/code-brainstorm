@@ -14,6 +14,7 @@ module.exports = {
     create: 'create',
     update: 'update',
     delete: 'delete',
-    contextToPayload: 'contextToPayload'
+    contextToPayload: 'contextToPayload',
+    contextToFilter: 'contextToFilter'
   }
 }

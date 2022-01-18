@@ -6,6 +6,7 @@ const readById = require('./readById')
 const validateJWT = require('./validateJWT')
 const validateSchema = require('./validateSchema')
 const contextToPayload = require('./contextToPayload')
+const contextToFilter = require('./contextToFilter')
 
 module.exports = [{
   name: 'create',
@@ -31,4 +32,7 @@ module.exports = [{
 }, {
   name: 'contextToPayload',
   rule: contextToPayload
+}, {
+  name: 'contextToFilter',
+  rule: contextToFilter
 }]
