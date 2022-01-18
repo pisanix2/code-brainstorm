@@ -16,6 +16,7 @@ const fileUpload = require('express-fileupload')
 
 cors(app)
 app.use(bodyParser.json({ limit: '1024kb' }))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(fileUpload())
 swagger.resetFile()
 
