@@ -55,7 +55,7 @@ const JSONSchemaToModelFile = (schema) => {
   `
 
   const footer = `
-    }, { paranoid: true, tableName: '${schema.persistenceName}' ${ DBSchema ? ', schema: ' + DBSchema : ''} })
+    }, { paranoid: true, tableName: '${schema.persistenceName}' ${ DBSchema ? `, schema: '${DBSchema}'` : ''} })
 
     ${assosiate}
 
