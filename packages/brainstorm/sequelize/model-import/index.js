@@ -28,7 +28,8 @@ const JSONSchemaToModelFile = (schema) => {
   `
 
   let properties = ''
-
+  
+  const DBSchema = schema.schema.DBSchema
   const props = schema.schema.properties
   const keys = Object.keys(schema.schema.properties)
   const pk = schema.schema.primaryKey
@@ -54,7 +55,7 @@ const JSONSchemaToModelFile = (schema) => {
   `
 
   const footer = `
-    }, { paranoid: true, tableName: '${schema.persistenceName}' })
+    }, { paranoid: true, tableName: '${schema.persistenceName}' ${ DBSchema ? ', schema: ' + DBSchema : ''} })
 
     ${assosiate}
 
