@@ -198,3 +198,4 @@ module.exports = {
   generate,
   resetFile
 }
+
