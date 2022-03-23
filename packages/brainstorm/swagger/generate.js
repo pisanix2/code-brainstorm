@@ -16,20 +16,35 @@ const createJson = (actions) => {
     const objAct = {}
 
     const objParams = []
-    const tmpUrl = item.path.split('/')
-    for (const param of tmpUrl) {
-      if (param.indexOf(':') >= 0) {
-        const paramName = param.replace(':', '')
-        docs.params = docs.params || {}
-        const docParam = docs.params[paramName] || {}
-        objParams.push({
-          in: 'path',
-          name: paramName,
-          description: docParam.description,
-          type: docParam.type || 'string'
-        })
+    const tmpUrl = item.path
+    docs.params = docs.params || {}
+
+    const splitedUrl = item.path.split('/')
+    for (const item of splitedUrl) {
+      if (item.indexOf(':') >= 0) {
+        const paramName = item.replace(':', '')
+        if (!docs.params[paramName]) {
+          docs.params[paramName] = {
+            description: paramName,
+            type: 'string'
+          }
+        }
       }
     }
+
+    const localParam = Object.keys(docs.params)
+    for (const item of localParam) {
+      const docParam = docs.params[item]
+      const type = (tmpUrl.indexOf(`:${item}`) >= 0) ? 'path' : 'query'
+      objParams.push({
+        in: type,
+        name: item,
+        description: docParam.description,
+        type: docParam.type || 'string',
+        format: docParam.format || null
+      })
+    }
+
     if (hasRead) {
       objParams.push({
         in: 'query',
