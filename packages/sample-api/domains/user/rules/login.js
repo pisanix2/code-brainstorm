@@ -15,7 +15,7 @@ const execute = async ({ payload, params, database, action, logger, errors, cont
     const jwt = sign(objUser)
     return { access_token: jwt, type: 'Bearer' }
   } else {
-    throw errors.buildError('401')
+    throw errors.buildError('401', 'Usuário não encontrado')
   }
   //  } else {
   //    throw errors.buildError('401', 'Authorization not found')

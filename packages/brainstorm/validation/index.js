@@ -1,15 +1,23 @@
 const Ajv = require('ajv')
-const ajv = new Ajv({ allErrors: true, removeAdditional:'all', strict: false })
+const addFormats = require('ajv-formats').default
 const compiled = {}
 const schemaStr = {}
 
 const registerSchema = (schemas) => {
+  const schemaArray = []
+  const cacheName = {}
   for (const schema of schemas) {
-    if (compiled[schema.name]) {
+    if (cacheName[schema.name]) {
       throw new Error(`Schema ${schema.name} was exists`)
     }
+    cacheName[schema.name] = true
+    schemaArray.push(schema.schema)
+  }
+  const ajv = new Ajv({ allErrors: true, removeAdditional:'all', strict: false, schemas: schemaArray })
+  addFormats(ajv)
+  for (const schema of schemas) {
     schemaStr[schema.name] = schema.schema
-    compiled[schema.name] = ajv.compile(schema.schema)
+    compiled[schema.name] = ajv.getSchema(schema.schema['$id'])
   }
 }
 

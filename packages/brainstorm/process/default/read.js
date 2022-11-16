@@ -29,14 +29,35 @@ const execute = async ({ payload, context, database, action, logger, transaction
     if (typeof obj === 'string') {
       obj = JSON.parse(decodeURIComponent(obj))
     }
+
+    const keys = Object.keys(obj)
+    for (const key of keys) {
+      if (typeof obj[key] === 'object') {
+        const itemKeys = Object.keys(obj[key])
+        for (const itemKey of itemKeys) {
+          if (database.Sequelize.Op[itemKey]) {
+            const vl = obj[key][itemKey]
+            delete obj[key][itemKey]
+            obj[key][database.Sequelize.Op[itemKey]] = vl
+          }
+        }
+      }
+    }
+
     where = obj
+  }
+
+  let include = null
+  if (action.include) {
+    include = action.include
   }
 
   const options = {
     order,
     limit,
     offset,
-    where
+    where,
+    include
   }
 
   const ret = await model.findAndCountAll(options, { transaction })

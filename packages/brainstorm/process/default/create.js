@@ -7,12 +7,12 @@ const execute = async ({ payload, context, database, action, logger, transaction
   if (!payload.id) {
     payload.id = uuid()
   }
-  if (context.user) {
-    if (model.rawAttributes.contractId && (!payload.contractId)) {
-      payload.contractId = context.user.contractId
-    }
+
+  const createOptions = { transaction }
+  if (action.include) {
+    createOptions.include = action.include
   }
-  const dataCreated = await model.create(payload, { transaction })
+  const dataCreated = await model.create(payload, createOptions)
   payload = await model.findByPk(dataCreated.id, { transaction })
   return payload
 }

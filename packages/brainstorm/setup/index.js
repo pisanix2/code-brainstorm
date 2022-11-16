@@ -40,6 +40,7 @@ const registerDomain = (domains) => {
 }
 
 const listen = (port) => {
+  schema.associate()
   api.listen(port)
 }
 

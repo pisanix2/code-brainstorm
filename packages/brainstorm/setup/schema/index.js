@@ -17,6 +17,10 @@ const register = (schemas) => {
   registerSchema(schemas)
 }
 
+const associate = () => {
+  modelImport.associate()
+}
+
 const getSchemaByName = (name) => {
   return schemaObj[name]
 }
@@ -32,6 +36,7 @@ const getSchemaArray = () => {
 
 module.exports = {
   register,
+  associate,
   getSchemaByName,
   getSchemaArray
 }

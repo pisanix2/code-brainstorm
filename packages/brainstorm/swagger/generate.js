@@ -4,8 +4,31 @@ const schema = require('../setup/schema')
 const pathCache = `${__dirname}/__cache`
 const path = `${pathCache}/api-definition.js`
 
+const checkPropRef = (schemaObj) => {
+  const newSchema = { ...schemaObj }
+  delete newSchema.belongsTo
+  delete newSchema.primaryKey
+  if (newSchema && newSchema.properties) {
+    for (const item of Object.keys(newSchema.properties)) {
+      const selProp = newSchema.properties[item]
+      if (selProp['$ref']) {
+        newSchema.properties[item] = { '$ref': `#${selProp['$ref']}` }
+      }
+      if (selProp.type === 'array') {
+        newSchema.properties[item] = {
+          type: selProp.type,
+          items: {
+            '$ref': `#${selProp.items['$ref']}` 
+          }
+        }
+      }
+    }
+  }
+  return newSchema
+}
+
 const createJson = (actions) => {
-  const jsonObj = {}
+  const jsonObj = { definitions: {} }
   for (const item of actions) {
     const verb = actionToVerb(item.action)
     const has404 = true
@@ -85,26 +108,43 @@ const createJson = (actions) => {
           in: 'body',
           name: 'body',
           type: 'object',
-          properties: schemaObj.properties
+          schema: {
+            '$ref': `#/definitions/${item.schema}`
+          }
         })
       }
     }
 
-    let schemaBody = null
+    /* registrar a definição do esquema */
     if (docs.outputSchema) {
       const schemaObj = schema.getSchemaByName(docs.outputSchema)
       if (schemaObj) {
-        let propertiesLocal = schemaObj
-        if (hasRead) {
-          propertiesLocal = {
-            properties: {
-              count: { type: 'integer' },
-              rows: { type: 'array', items: { type: 'object', properties: schemaObj.properties } }
-            }
+        if (!hasRead) {
+          if (!jsonObj.definitions[docs.outputSchema]) {
+            jsonObj.definitions[docs.outputSchema] = checkPropRef(schemaObj)
           }
         }
-        schemaBody = {
-          properties: propertiesLocal.properties
+      }
+    }
+
+    if (item.schema) {
+      const schemaObj = schema.getSchemaByName(item.schema)
+      if (schemaObj) {
+        if (!jsonObj.definitions[item.schema]) {
+          jsonObj.definitions[item.schema] = checkPropRef(schemaObj)
+        }
+      }
+    }
+    /** */
+
+    let objBody = {
+      '$ref': `#/definitions/${docs.outputSchema}`
+    }
+    if (hasRead) {
+      objBody = {
+        properties: {
+          count: { type: 'integer' },
+          rows: { type: 'array', items: { '$ref': `#/definitions/${docs.outputSchema}` } }
         }
       }
     }
@@ -112,7 +152,7 @@ const createJson = (actions) => {
     const obj200 = {
       '200': {
         description: 'OK',
-        schema: schemaBody
+        schema: objBody
       }
     }
 
@@ -198,4 +238,3 @@ module.exports = {
   generate,
   resetFile
 }
-

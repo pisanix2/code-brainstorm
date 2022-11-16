@@ -10,6 +10,14 @@ const importSchema = (schemas) => {
   }
 }
 
+const associate = () => {
+  Object.keys(models).forEach(modelName => {
+    if (models[modelName].associate) {
+      models[modelName].associate(models)
+    }
+  })
+}
+
 const typeSchemaToModel = (type, format) => {
   if (type === 'number') return 'NUMBER'
   else if (type === 'boolean') return 'BOOLEAN'
@@ -21,6 +29,11 @@ const typeSchemaToModel = (type, format) => {
   }
 }
 
+const parseRef = (ref) => {
+  const obj = ref.split('/')
+  return obj[obj.length-1]
+}
+
 const JSONSchemaToModelFile = (schema) => {
   const head = `
   module.exports = (sequelize, DataTypes) => {
@@ -29,6 +42,7 @@ const JSONSchemaToModelFile = (schema) => {
 
   let properties = ''
   
+  const ass = []
   const DBSchema = schema.schema.DBSchema
   const props = schema.schema.properties
   const keys = Object.keys(schema.schema.properties)
@@ -37,7 +51,8 @@ const JSONSchemaToModelFile = (schema) => {
     if (['string', 'number', 'date', 'integer', 'boolean', 'object', 'array'].indexOf(props[col].type) >= 0) {
       let colStr = ''
       const colDef = props[col]
-      if (!colDef.virtual) {
+      
+      if ((!colDef.virtual) && (!(colDef.items && colDef.items['$ref']))) {
         const req = (schema.schema.required || []).includes(col)
         colStr = `${col}: {
         type: DataTypes.${typeSchemaToModel(props[col].type, props[col].format)}
@@ -48,11 +63,33 @@ const JSONSchemaToModelFile = (schema) => {
       }
       properties += colStr
     }
+    if (props[col]['$ref']) {
+      ass.push({ kind: 'hasOne', ref: parseRef(props[col]['$ref']), as: props[col].as, foreignKey: props[col].foreignKey })
+    }
+    if (props[col].type === 'array' && props[col].items['$ref']) {
+      const through = props[col].items.through
+      const kind = through ? 'belongsToMany' : 'hasMany'
+      ass.push({ kind, ref: parseRef(props[col].items['$ref']), as: props[col].items.as, foreignKey: props[col].items.foreignKey, through })
+    }
+  }
+  if (schema && schema.schema && schema.schema.belongsTo) {
+    for (const blto of schema.schema.belongsTo) {
+      ass.push({ kind: 'belongsTo', ref: blto.ref, as: blto.as, foreignKey: blto.foreignKey })
+    }
   }
 
-  //#TODO - Create associate
-  const assosiate = `
-  `
+  let assosiate = ''
+  if (ass && ass.length) {
+    assosiate += '_model.associate = function (models) { '
+    for (const itemAs of ass) {
+      assosiate += `
+          models.${schema.name}.${itemAs.kind}(models.${itemAs.ref}, { as: '${itemAs.as}', foreignKey: '${itemAs.foreignKey}' ${
+            itemAs.through ? `, through: '${itemAs.through}'`: ''
+          } })
+        `
+    }
+    assosiate += '}'
+  }
 
   const footer = `
     }, { paranoid: true, tableName: '${schema.persistenceName}' ${ DBSchema ? `, schema: '${DBSchema}'` : ''} })
@@ -78,5 +115,6 @@ const JSONSchemaToModelFile = (schema) => {
 }
 
 module.exports = {
-  importSchema
+  importSchema,
+  associate
 }

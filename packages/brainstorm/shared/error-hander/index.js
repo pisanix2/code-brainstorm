@@ -10,7 +10,6 @@ const errors = {
     options = options || { reQueue: true }
     let error = errors.getErrorInstance()
     error.addError(code, message)
-    error.reQueue = options.reQueue
     logger.error(`${code} ${message}`)
     return error
   }
